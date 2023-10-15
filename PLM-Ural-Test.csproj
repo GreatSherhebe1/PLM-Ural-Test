@@ -6,6 +6,7 @@
         <RootNamespace>PLM_Ural_Test</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <GenerateProgramFile>false</GenerateProgramFile>
     </PropertyGroup>
 
     <ItemGroup>
