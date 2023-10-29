@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Linq;
 using System.ComponentModel.Design;
 
 namespace PLM_Ural_Test;
@@ -76,6 +77,7 @@ public class PolishMathSolver
             {
                 if (double.TryParse(cleanIncome.Substring(startIndex, i - startIndex), out numItem))
                     result.Add(numItem.ToString());
+
                 result.Add(cleanIncome[i].ToString());
                 startIndex = i + 1;
             }
@@ -90,12 +92,13 @@ public class PolishMathSolver
     private double Solve()
     {
         double numToken;
-        string opToken;
+        var opToken = string.Empty;
         
         foreach (var token in tokens)
         {
             if (double.TryParse(token, out numToken))
             {
+                // putting minus operation in value to rid of "henging" operations
                 if (operationStack.Count > 0 && operationStack.Peek() == "-")
                     numToken = HandleMinusOperation(numToken);
 
@@ -112,20 +115,10 @@ public class PolishMathSolver
 
             throw new ArgumentException($"unidentified operation \"{token}\"");
         }
-        
-        if (operationStack.Any() && valueStack.Any())
-        {
-            if (IsOnlyOperationAndValue())
-                return HandleOnlyOperationAndValue();
 
-            while (operationStack.TryPop(out opToken)) 
-                Operate(opToken);
-            
-            return valueStack.Pop();
-        }
+        HandleLastOperationsAfterTokensEnd(opToken);
 
         valueStack.TryPop(out numToken);
-
         return numToken;
     }
 
@@ -133,7 +126,6 @@ public class PolishMathSolver
     {
         if (operationStack.Any())
         {
-
             if (token == ")")
             {
                 HandleCloseBracket();
@@ -152,15 +144,14 @@ public class PolishMathSolver
             {
                 CheckOperationPossibility();
                 HandleGreaterOrEqualOperation(token);
+                return;
             }
 
-            else
-            {
-                operationStack.Push(token);
-                isPreviousSignOpenBracket = false;
-            }
+            operationStack.Push(token);
+            isPreviousSignOpenBracket = false;
             
         }
+
         else
         {
             if (token == "(")
@@ -168,40 +159,6 @@ public class PolishMathSolver
 
             operationStack.Push(token);
         }
-    }
-
-    private bool IsOperationPriorityGreaterOrEqualOperationInStack(string token)
-    {
-        return operations[operationStack.Peek()].Priority >= operations[token].Priority;
-    }
-
-    private bool IsAvailableSymbol(string symbol)
-    {
-        return availableOperationSymbols.Contains(symbol);
-    }
-
-    private bool IsOnlyOperationAndValue()
-    {
-        return valueStack.Count == 1 && operationStack.Count == 1;
-    }
-
-    private bool IsPossibleOperate()
-    {
-        return valueStack.Count >= 2;
-    }
-
-    private void CheckOperationPossibility()
-    {
-        if (!IsPossibleOperate())
-            throw new Exception("Impossible to operate without values");
-    }
-    
-    private void Operate(string operation)
-    {
-        var secondValue = valueStack.Pop();
-        var firstValue = valueStack.Pop();
-        
-        valueStack.Push(operations[operation].Operate(firstValue, secondValue));
     }
 
     private double HandleMinusOperation(double numToken)
@@ -218,6 +175,23 @@ public class PolishMathSolver
 
         operationStack.Push("+");
         return numToken;
+    }
+
+    private void HandleLastOperationsAfterTokensEnd(string opToken)
+    {
+        if (operationStack.Any() && valueStack.Any())
+        {
+            while (operationStack.TryPop(out opToken))
+                Operate(opToken);
+        }
+    }
+
+    private void Operate(string operation)
+    {
+        var secondValue = valueStack.Pop();
+        var firstValue = valueStack.Pop();
+        
+        valueStack.Push(operations[operation].Operate(firstValue, secondValue));
     }
 
     private void HandleCloseBracket()
@@ -237,13 +211,24 @@ public class PolishMathSolver
         operationStack.Push(token);
     }
 
-    private double HandleOnlyOperationAndValue()
+    private bool IsAvailableSymbol(string symbol)
     {
-        var opToken = operationStack.Peek();
-        
-        if (opToken != "+" && opToken != "-")
-            throw new Exception("Wrong subsequence");
-        
-        return opToken == "-" ? valueStack.Pop() * -1: valueStack.Pop();
+        return availableOperationSymbols.Contains(symbol);
+    }
+
+    private bool IsOperationPriorityGreaterOrEqualOperationInStack(string token)
+    {
+        return operations[operationStack.Peek()].Priority >= operations[token].Priority;
+    }
+
+    private void CheckOperationPossibility()
+    {
+        if (!IsPossibleOperate())
+            throw new Exception("Impossible to operate without values");
+    }
+
+    private bool IsPossibleOperate()
+    {
+        return valueStack.Count >= 2;
     }
 }
