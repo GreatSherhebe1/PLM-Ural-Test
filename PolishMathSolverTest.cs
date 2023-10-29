@@ -64,4 +64,17 @@ public class PolishMathSolverTest
     {
         Assert.Catch(() => new PolishMathSolver().SolveMathExp(income));
     }
+
+    [TestCase("-1 + 1", 0)]
+    [TestCase("-1 + (-1)", -2)]
+    [TestCase("1 + (-1)", 0)]
+    [TestCase("(-1) + (-1)", -2)]
+    [TestCase("-1 - 1", -2)]
+    [TestCase("-1 * (-1)", 1)]
+    [TestCase("(-1) * (-1)", 1)]
+    [TestCase("(-1) * (-1) / (-1)", -1)]
+    public void WorkWithUnarMinus(string income, double expected)
+    {
+        Assert.AreEqual(expected, new PolishMathSolver().SolveMathExp(income));
+    }
 }

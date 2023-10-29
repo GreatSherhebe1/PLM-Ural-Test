@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "NKemD0ZVFQE6hKYDFMLp9L991ZKkNKEQGZ/ZEdPItX909kK8q70HVx7eShg+hotdK8u+ZS/YWnG2vcqKyDSwFw==",
+  "dgSpecHash": "iiw+VqN5l8NqjfLvVQyPJAKVUrCQs1VUfxdi4nWRfiuF5dXy0X5XwICuN10oB84FBwENsxecANFbQPcUSAPPVQ==",
   "success": true,
-  "projectFilePath": "D:\\study\\подготовка к работе\\PLM-Ural-Test\\PLM-Ural-Test.csproj",
+  "projectFilePath": "D:\\study\\подготовка к работе\\PLM-Test\\PLM-Ural-Test\\PLM-Ural-Test.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\sherh\\.nuget\\packages\\microsoft.codecoverage\\17.9.0-preview-23503-02\\microsoft.codecoverage.17.9.0-preview-23503-02.nupkg.sha512",
     "C:\\Users\\sherh\\.nuget\\packages\\microsoft.net.test.sdk\\17.9.0-preview-23503-02\\microsoft.net.test.sdk.17.9.0-preview-23503-02.nupkg.sha512",

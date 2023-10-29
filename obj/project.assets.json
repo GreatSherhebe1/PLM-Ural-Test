@@ -879,11 +879,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\study\\подготовка к работе\\PLM-Ural-Test\\PLM-Ural-Test.csproj",
+      "projectUniqueName": "D:\\study\\подготовка к работе\\PLM-Test\\PLM-Ural-Test\\PLM-Ural-Test.csproj",
       "projectName": "PLM-Ural-Test",
-      "projectPath": "D:\\study\\подготовка к работе\\PLM-Ural-Test\\PLM-Ural-Test.csproj",
+      "projectPath": "D:\\study\\подготовка к работе\\PLM-Test\\PLM-Ural-Test\\PLM-Ural-Test.csproj",
       "packagesPath": "C:\\Users\\sherh\\.nuget\\packages\\",
-      "outputPath": "D:\\study\\подготовка к работе\\PLM-Ural-Test\\obj\\",
+      "outputPath": "D:\\study\\подготовка к работе\\PLM-Test\\PLM-Ural-Test\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\sherh\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -941,7 +941,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.415\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.416\\RuntimeIdentifierGraph.json"
       }
     }
   }

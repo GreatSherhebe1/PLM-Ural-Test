@@ -11,6 +11,8 @@ public class PolishMathSolver
     private Stack<double> valueStack = new Stack<double>();
     private Stack<string> operationStack  = new Stack<string>();
 
+    private bool isPreviousSignOpenBracket;
+
     public double SolveMathExp(string income)
     {
         if (!AreBracketsCorrect(income))
@@ -94,6 +96,10 @@ public class PolishMathSolver
         {
             if (double.TryParse(token, out numToken))
             {
+                if (operationStack.Count > 0 && operationStack.Peek() == "-")
+                    numToken = HandleMinusOperation(numToken);
+
+                isPreviousSignOpenBracket = false;
                 valueStack.Push(numToken);
                 continue;
             }
@@ -111,7 +117,7 @@ public class PolishMathSolver
         {
             if (IsOnlyOperationAndValue())
                 return HandleOnlyOperationAndValue();
-                
+
             while (operationStack.TryPop(out opToken)) 
                 Operate(opToken);
             
@@ -127,8 +133,6 @@ public class PolishMathSolver
     {
         if (operationStack.Any())
         {
-            if (operationStack.Peek() == "-")
-                InverseMinusOperation();
 
             if (token == ")")
             {
@@ -138,6 +142,8 @@ public class PolishMathSolver
 
             if (token == "(" || operationStack.Peek() == "(")
             {
+                if (token == "(")
+                    isPreviousSignOpenBracket = true;
                 operationStack.Push(token);
                 return;
             }
@@ -149,11 +155,19 @@ public class PolishMathSolver
             }
 
             else
+            {
                 operationStack.Push(token);
+                isPreviousSignOpenBracket = false;
+            }
+            
         }
-        
         else
+        {
+            if (token == "(")
+                isPreviousSignOpenBracket = true;
+
             operationStack.Push(token);
+        }
     }
 
     private bool IsOperationPriorityGreaterOrEqualOperationInStack(string token)
@@ -190,17 +204,20 @@ public class PolishMathSolver
         valueStack.Push(operations[operation].Operate(firstValue, secondValue));
     }
 
-    private void InverseMinusOperation()
+    private double HandleMinusOperation(double numToken)
     {
-        if (valueStack.Count == 0)
+        numToken *= -1;
+        operationStack.Pop();
+
+        if (valueStack.Count == 0
+            || isPreviousSignOpenBracket)
         {
-            operationStack.Push("-");
-            return;
+            isPreviousSignOpenBracket = false;
+            return numToken;
         }
 
-        valueStack.Push(valueStack.Pop() * -1);
-        operationStack.Pop();
         operationStack.Push("+");
+        return numToken;
     }
 
     private void HandleCloseBracket()
