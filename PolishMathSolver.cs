@@ -14,19 +14,7 @@ public class PolishMathSolver
 
     private bool isPreviousSignOpenBracket;
 
-    public double SolveMathExp(string income)
-    {
-        if (!AreBracketsCorrect(income))
-            throw new Exception("Incorrect placement of brackets: closed != opened");
-        
-        InitializeAvailableOperations();
-        
-        tokens = ExtractTokens(income);
-        
-        return Solve();
-    }
-
-    private void InitializeAvailableOperations()
+    public PolishMathSolver() 
     {
         operations = new Dictionary<string, Operation>
         {
@@ -44,6 +32,15 @@ public class PolishMathSolver
 
         availableOperationSymbols = new List<string>() { "(", ")" };
         availableOperationSymbols.AddRange(operations.Keys);
+    }
+
+    public double SolveMathExp(string income)
+    {
+        if (!AreBracketsCorrect(income))
+            throw new Exception("Incorrect placement of brackets: closed != opened");
+        
+        tokens = ExtractTokens(income);
+        return Solve();
     }
     
     private bool AreBracketsCorrect(string income)
@@ -98,7 +95,7 @@ public class PolishMathSolver
         {
             if (double.TryParse(token, out numToken))
             {
-                // putting minus operation in value to rid of "henging" operations
+                // putting minus operation in value to rid of "henging" & extra operations
                 if (operationStack.Count > 0 && operationStack.Peek() == "-")
                     numToken = HandleMinusOperation(numToken);
 
@@ -134,8 +131,7 @@ public class PolishMathSolver
 
             if (token == "(" || operationStack.Peek() == "(")
             {
-                if (token == "(")
-                    isPreviousSignOpenBracket = true;
+                HandleOpenBracket(token);
                 operationStack.Push(token);
                 return;
             }
@@ -149,14 +145,11 @@ public class PolishMathSolver
 
             operationStack.Push(token);
             isPreviousSignOpenBracket = false;
-            
         }
 
         else
         {
-            if (token == "(")
-                isPreviousSignOpenBracket = true;
-
+            HandleOpenBracket(token);
             operationStack.Push(token);
         }
     }
@@ -205,6 +198,12 @@ public class PolishMathSolver
         operationStack.Pop();
     }
 
+    private void HandleOpenBracket(string token)
+    {
+        if (token == "(")
+            isPreviousSignOpenBracket = true;
+    }
+
     private void HandleGreaterOrEqualOperation(string token)
     {
         Operate(operationStack.Pop());
@@ -223,12 +222,7 @@ public class PolishMathSolver
 
     private void CheckOperationPossibility()
     {
-        if (!IsPossibleOperate())
+        if (valueStack.Count < 2)
             throw new Exception("Impossible to operate without values");
-    }
-
-    private bool IsPossibleOperate()
-    {
-        return valueStack.Count >= 2;
     }
 }
